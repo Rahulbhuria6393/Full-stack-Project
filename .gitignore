@@ -1,0 +1,7 @@
+node_modules/
+.env
+dist/
+server/temp/*
+!server/temp/.gitkeep
+server/.mongodb-data/
+*.log

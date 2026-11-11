@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,11 +10,10 @@ const __dirname = path.dirname(__filename);
 let memoryServer = null;
 
 export const connectDB = async () => {
-  const primaryUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/evalengine';
-
+  const primaryUri = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/evalengine';
   try {
     await mongoose.connect(primaryUri, { serverSelectionTimeoutMS: 2500 });
-    console.log(`[DB] Connected to MongoDB at ${primaryUri}`);
+    await mongoose.connect(primaryUri, { serverSelectionTimeoutMS: 10000, family: 4 });
     return { mode: 'external', uri: primaryUri };
   } catch (primaryErr) {
     const allowFallback = process.env.USE_MEMORY_DB_FALLBACK !== 'false';
